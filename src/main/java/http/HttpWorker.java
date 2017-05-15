@@ -29,7 +29,11 @@ public class HttpWorker extends Thread{
             //just a string payload WITHOUT http spec
             String requestString = br.readLine();
             //just a string payload WITHOUT http spec
-            String responseString = "Hello, " + requestString + ".";
+            String responseString = "HTTP/1.1 200 OK\n" +
+                    "Content-Type: text/html\n" +
+                    "Content-Length: 46\n" +
+                    "\n" +
+                    "<html><body><h1>hello world</h1></body></html>";
             //write response to client
             srcSocket.getOutputStream().write(responseString.getBytes());
             //close socket
