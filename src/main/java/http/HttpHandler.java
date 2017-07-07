@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Date;
+
 /**
  * Created by yanxiaonan on 17/7/5.
  */
@@ -35,9 +37,18 @@ public class HttpHandler {
     }
 
     public String handle(){
-        response.sendHtmlFile();
+        this.response.sendHtmlFile();
 
-        return response.buildResponse();
+        return this.response.buildResponse();
+    }
+
+    public String getLog(){
+        return (new Date()).toString()
+                + " " + this.request.getProtocol().toUpperCase() + "/" + this.request.getVersion()
+                + " " + this.request.getMethod()
+                + " " + this.request.getPath()
+                + " " + this.response.getStatus()
+                + " " + this.response.getHeader("Content-Length");
     }
 
 }

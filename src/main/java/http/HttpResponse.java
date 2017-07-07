@@ -2,6 +2,7 @@ package http;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Set;
@@ -20,16 +21,24 @@ public class HttpResponse extends HttpBase{
         byte[] b = null;
         try {
             b = Files.readAllBytes(Paths.get(System.getProperty("user.dir")+"/webroot"+this.request.getPath()));
+        } catch (NoSuchFileException e) {
+            b = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String html = new String(b);
+
         this.setProtocol(this.request.getProtocol());
         this.setVersion(this.request.getVersion());
-        this.setBody(html);
-        this.addHeader("Content-Type", "text/html");
-        this.addHeader("Content-Length", String.valueOf(html.length()));
-        this.setStatus("200");
+        if(b == null){
+            this.setStatus("404");
+        }else {
+            String html = new String(b);
+            this.setBody(html);
+            this.addHeader("Content-Type", "text/html");
+            this.addHeader("Content-Length", String.valueOf(html.length()));
+            this.setStatus("200");
+        }
+
     }
 
     public String buildResponse(){
@@ -55,7 +64,7 @@ public class HttpResponse extends HttpBase{
         //break between header and body
         responseString.append("\r\n");
 
-        if(!this.getHeader("Content-Length").equals("")){
+        if(this.getHeader("Content-Length") != null && this.getHeader("Content-Length").equals("") == false){
             responseString.append(this.getBody());
         }
         return responseString.toString();

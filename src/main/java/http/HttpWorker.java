@@ -49,7 +49,7 @@ public class HttpWorker extends Thread{
             srcSocket.getOutputStream().write(responseString.getBytes());
             //close socket
             srcSocket.close();
-            System.out.println("solved");
+            System.out.println(httpHandler.getLog());
 
         } catch (IOException e) {
             e.printStackTrace();
