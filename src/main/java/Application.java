@@ -10,7 +10,7 @@ public class Application{
         try {
             //new and listen
             ServerSocket serverSocket = new ServerSocket(8033);
-            System.out.println("listening on " + 8003);
+            System.out.println("listening on " + 8033);
             while(true){
                 //block until accept a connection
                 System.out.println("waiting for connection...");

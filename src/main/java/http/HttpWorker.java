@@ -25,15 +25,26 @@ public class HttpWorker extends Thread{
     public void run(){
         try {
             System.out.println("start to solve:" + Thread.currentThread().getId());
+
+            //input stream
             BufferedReader br = new BufferedReader(new InputStreamReader(srcSocket.getInputStream()));
-            //just a string payload WITHOUT http spec
-            String requestString = br.readLine();
-            //just a string payload WITHOUT http spec
-            String responseString = "HTTP/1.1 200 OK\n" +
-                    "Content-Type: text/html\n" +
-                    "Content-Length: 46\n" +
-                    "\n" +
-                    "<html><body><h1>hello world</h1></body></html>";
+            HttpHandler httpHandler = new HttpHandler();
+
+            //build first line
+            String line = br.readLine();
+            httpHandler.buildFirstLine(line);
+
+            //build headers
+            while(true){
+                line = br.readLine();
+                if(line.equals("")){ break; }
+                httpHandler.buildHeader(line);
+            }
+
+            //handle;
+            String responseString = httpHandler.handle();
+
+
             //write response to client
             srcSocket.getOutputStream().write(responseString.getBytes());
             //close socket
